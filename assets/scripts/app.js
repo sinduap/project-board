@@ -12,9 +12,54 @@ class DOMHelper {
   }
 }
 
-class Tooltip {}
+class Component {
+  constructor(hostElementId, insertBefore = false) {
+    if (hostElementId) {
+      this.hostElementId = document.getElementById(hostElementId);
+    } else {
+      this.hostElementId = document.body;
+    }
+    this.insertBefore = insertBefore;
+  }
+
+  detach() {
+    if (this.element) {
+      this.element.remove();
+    }
+  }
+
+  attach() {
+    this.hostElementId.insertAdjacentElement(
+      this.insertBefore ? 'afterbegin' : 'beforeend',
+      this.element
+    );
+  }
+}
+
+class Tooltip extends Component {
+  constructor(closeNotifierFn) {
+    super();
+    this.closeNotifier = closeNotifierFn;
+    this.create();
+  }
+
+  closeTooltip() {
+    this.detach();
+    this.closeNotifier();
+  }
+
+  create() {
+    const tooltipElement = document.createElement('div');
+    tooltipElement.className = 'card';
+    tooltipElement.textContent = 'Dummy';
+    tooltipElement.addEventListener('click', this.closeTooltip.bind(this));
+    this.element = tooltipElement;
+  }
+}
 
 class ProjectItem {
+  hasActiveTooltip = false;
+
   constructor(id, updateProjectListsFn, type) {
     this.id = id;
     this.updateProjectListsHandler = updateProjectListsFn;
@@ -22,7 +67,22 @@ class ProjectItem {
     this.connectSwitchButton(type);
   }
 
-  connectMoreInfoButton() {}
+  connectMoreInfoButton() {
+    const projectItemEl = document.getElementById(this.id);
+    const moreInfoBtn = projectItemEl.querySelector('button:first-of-type');
+    moreInfoBtn.addEventListener('click', this.showMoreInfoHandler);
+  }
+
+  showMoreInfoHandler() {
+    if (this.hasActiveTooltip) {
+      return;
+    }
+    const toolTip = new Tooltip(() => {
+      this.hasActiveTooltip = false;
+    });
+    toolTip.attach();
+    this.hasActiveTooltip = true;
+  }
 
   connectSwitchButton(type) {
     const projectItemEl = document.getElementById(this.id);
