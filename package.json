@@ -1,0 +1,28 @@
+{
+  "name": "project-planner",
+  "version": "1.0.0",
+  "description": "project planner",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "build:dev": "webpack serve",
+    "build:prod": "webpack --config webpack.config.prod.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sinduap/project-board.git"
+  },
+  "author": "Sindu Andita Pratama",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sinduap/project-board/issues"
+  },
+  "homepage": "https://github.com/sinduap/project-board#readme",
+  "devDependencies": {
+    "eslint": "^7.16.0",
+    "webpack": "^5.11.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
